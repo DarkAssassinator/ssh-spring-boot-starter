@@ -8,7 +8,7 @@
         <version>2.7.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.eyann</groupId>
+    <groupId>com.yann</groupId>
     <artifactId>ssh-spring-boot-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ssh-spring-boot-starter</name>
