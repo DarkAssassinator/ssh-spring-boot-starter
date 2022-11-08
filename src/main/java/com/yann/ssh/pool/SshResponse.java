@@ -17,19 +17,21 @@
  * under the License.
  */
 
-package com.yann.ssh.autoconfigure;
+package com.yann.ssh.pool;
 
-import com.yann.ssh.properties.SshProperties;
+import java.util.List;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import lombok.Data;
 
 /**
  * @author Yann Ann
- * @date 2022/11/7 21:14
+ * @date 2022/11/7 22:23
  */
-@Configuration
-@EnableConfigurationProperties(SshProperties.class)
-public class SshAutoConfiguration {
+@Data
+public class SshResponse {
+
+    private int exitCode;
+
+    private List<String> out;
 
 }

@@ -17,19 +17,26 @@
  * under the License.
  */
 
-package com.yann.ssh.autoconfigure;
+package com.yann.ssh.pool;
 
-import com.yann.ssh.properties.SshProperties;
+import com.yann.ssh.entity.SshSession;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
  * @author Yann Ann
- * @date 2022/11/7 21:14
+ * @date 2022/11/7 22:11
  */
-@Configuration
-@EnableConfigurationProperties(SshProperties.class)
-public class SshAutoConfiguration {
+public class SshSessionPoolConfig extends GenericKeyedObjectPoolConfig<SshSession> {
+
+    public SshSessionPoolConfig() {
+        setJmxEnabled(false);
+        setTestOnBorrow(true);
+        setTestOnCreate(true);
+        setTestOnReturn(true);
+        setTestWhileIdle(true);
+        setMinIdlePerKey(0);
+        setNumTestsPerEvictionRun(-1);
+    }
 
 }
