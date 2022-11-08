@@ -17,19 +17,24 @@
  * under the License.
  */
 
-package com.yann.ssh.autoconfigure;
-
-import com.yann.ssh.properties.SshProperties;
-
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+package com.yann.ssh.exception;
 
 /**
  * @author Yann Ann
- * @date 2022/11/7 21:14
+ * @date 2022/11/7 22:34
  */
-@Configuration
-@EnableConfigurationProperties(SshProperties.class)
-public class SshAutoConfiguration {
+public class SshException extends RuntimeException {
+
+    public SshException() {
+        super();
+    }
+
+    public SshException(String message) {
+        super(message);
+    }
+
+    public SshException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

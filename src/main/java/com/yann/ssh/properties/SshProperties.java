@@ -19,10 +19,11 @@
 
 package com.yann.ssh.properties;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import java.time.Duration;
+
+import lombok.Data;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * SSH Session Configuration

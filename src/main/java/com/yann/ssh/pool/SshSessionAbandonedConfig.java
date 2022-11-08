@@ -17,19 +17,18 @@
  * under the License.
  */
 
-package com.yann.ssh.autoconfigure;
+package com.yann.ssh.pool;
 
-import com.yann.ssh.properties.SshProperties;
-
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.apache.commons.pool2.impl.AbandonedConfig;
 
 /**
  * @author Yann Ann
- * @date 2022/11/7 21:14
+ * @date 2022/11/7 22:20
  */
-@Configuration
-@EnableConfigurationProperties(SshProperties.class)
-public class SshAutoConfiguration {
+public class SshSessionAbandonedConfig extends AbandonedConfig {
+
+    public SshSessionAbandonedConfig() {
+        setRemoveAbandonedOnMaintenance(true);
+    }
 
 }
