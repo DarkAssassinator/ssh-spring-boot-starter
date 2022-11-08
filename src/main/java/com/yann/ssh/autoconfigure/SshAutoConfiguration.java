@@ -19,9 +19,18 @@
 
 package com.yann.ssh.autoconfigure;
 
+import com.yann.ssh.pool.SshSessionAbandonedConfig;
+import com.yann.ssh.pool.SshSessionHolder;
+import com.yann.ssh.pool.SshSessionPool;
+import com.yann.ssh.pool.SshSessionPoolConfig;
 import com.yann.ssh.properties.SshProperties;
+import com.yann.ssh.properties.SshProperties.SftpProperties;
 
+import org.apache.commons.pool2.impl.AbandonedConfig;
+import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -31,5 +40,32 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties(SshProperties.class)
 public class SshAutoConfiguration {
+
+    @Bean
+    public GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig(SshProperties properties) {
+        SshSessionPoolConfig poolConfig = new SshSessionPoolConfig();
+        BeanUtils.copyProperties(properties.getPool(), poolConfig);
+        return poolConfig;
+    }
+
+    @Bean
+    public AbandonedConfig abandonedConfig(SshProperties properties) {
+        SshSessionAbandonedConfig abandonedConfig = new SshSessionAbandonedConfig();
+        BeanUtils.copyProperties(properties.getPool(), abandonedConfig);
+        return abandonedConfig;
+    }
+
+    @Bean
+    public SftpProperties sftpProperties(SshProperties properties) {
+        SftpProperties sftpProperties = new SftpProperties();
+        BeanUtils.copyProperties(properties.getSftp(), sftpProperties);
+        return sftpProperties;
+    }
+
+    @Bean
+    public SshSessionPool sessionPool(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig,
+                                      AbandonedConfig abandonedConfig) {
+        return new SshSessionPool(poolConfig, abandonedConfig);
+    }
 
 }

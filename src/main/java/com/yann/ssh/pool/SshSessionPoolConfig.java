@@ -19,15 +19,13 @@
 
 package com.yann.ssh.pool;
 
-import com.yann.ssh.entity.SshSession;
-
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 
 /**
  * @author Yann Ann
  * @date 2022/11/7 22:11
  */
-public class SshSessionPoolConfig extends GenericKeyedObjectPoolConfig<SshSession> {
+public class SshSessionPoolConfig extends GenericKeyedObjectPoolConfig<SshSessionHolder> {
 
     public SshSessionPoolConfig() {
         setJmxEnabled(false);

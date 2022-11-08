@@ -34,19 +34,24 @@ import org.slf4j.LoggerFactory;
  * @author Yann Ann
  * @date 2022/11/8 22:01
  */
-public final class SshSessionPool {
+public class SshSessionPool {
 
     private static final Logger logger = LoggerFactory.getLogger(SshSessionPool.class);
 
-    private static volatile GenericKeyedObjectPool<SshSession, SshSessionHolder> sessionPool = null;
+    private volatile GenericKeyedObjectPool<SshSession, SshSessionHolder> sessionPool = null;
 
-    private static GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig;
+    private GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig;
 
-    private static AbandonedConfig abandonedConfig;
+    private AbandonedConfig abandonedConfig;
 
-    private static SftpConfig sftpConfig;
+    private SftpConfig sftpConfig;
 
-    public static GenericKeyedObjectPool<SshSession, SshSessionHolder> getSessionPool() {
+    public SshSessionPool(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig, AbandonedConfig abandonedConfig) {
+        this.poolConfig = poolConfig;
+        this.abandonedConfig = abandonedConfig;
+    }
+
+    public GenericKeyedObjectPool<SshSession, SshSessionHolder> getSessionPool() {
         if (sessionPool == null) {
             synchronized (SshSessionPool.class) {
                 if (sessionPool == null) {
@@ -58,17 +63,17 @@ public final class SshSessionPool {
         return sessionPool;
     }
 
-    public static SshSessionHolder getSessionHolder(SshSession sessionHost) throws Exception {
+    public SshSessionHolder getSessionHolder(SshSession sessionHost) throws Exception {
         logger.info("try to borrow a session:{}", sessionHost.toString());
         return getSessionPool().borrowObject(sessionHost);
     }
 
-    public static void returnSshSessionHolder(SshSession sessionHost, SshSessionHolder sessionHolder) {
+    public void returnSshSessionHolder(SshSession sessionHost, SshSessionHolder sessionHolder) {
         logger.info("return session:{}", sessionHost.toString());
         getSessionPool().returnObject(sessionHost, sessionHolder);
     }
 
-    public static void printPoolStatus() {
+    public void printPoolStatus() {
         Map<String, Integer> activeKeyMap = sessionPool.getNumActivePerKey();
         for (Map.Entry<String, Integer> key : activeKeyMap.entrySet()) {
             String hostName = key.getKey();
@@ -80,20 +85,20 @@ public final class SshSessionPool {
                 sessionPool.getMaxTotal());
     }
 
-    public static void setPoolConfig(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig) {
-        SshSessionPool.poolConfig = poolConfig;
+    public void setPoolConfig(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig) {
+        this.poolConfig = poolConfig;
     }
 
-    public static void setAbandonedConfig(AbandonedConfig abandonedConfig) {
-        SshSessionPool.abandonedConfig = abandonedConfig;
+    public void setAbandonedConfig(AbandonedConfig abandonedConfig) {
+        this.abandonedConfig = abandonedConfig;
     }
 
-    public static SftpConfig getSftpConfig() {
+    public SftpConfig getSftpConfig() {
         return sftpConfig;
     }
 
-    public static void setSftpConfig(SftpConfig sftpConfig) {
-        SshSessionPool.sftpConfig = sftpConfig;
+    public void setSftpConfig(SftpConfig sftpConfig) {
+        this.sftpConfig = sftpConfig;
     }
 
 }
