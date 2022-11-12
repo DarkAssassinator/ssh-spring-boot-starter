@@ -8,5 +8,5 @@ This is a SSH ACP Spring boot Starter project.
 
 
 :loud_sound:计划
-+ [ ] maven包支持远程仓库
++ [x] maven包支持远程仓库
 + [ ] 可支持Channel级别的连接池
