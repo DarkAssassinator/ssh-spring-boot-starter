@@ -21,16 +21,16 @@ If you're using Maven, that looks like this:
 </dependency>
 ```
 If you're using Gradle, that looke like this:
-```
+```gradle
 implementation group: 'io.github.DarkAssassinator', name: 'ssh-spring-boot-starter', version: '1.0.0'
 ```
 Next, you can instantiate a SSH Session pool like
-```
+```java
 @Autowired
 private SshSessionPool sessionPool;
 ```
 Then you should create a SSH Session Host Entity named `SshSession`. See the example below:
-```
+```java
 SshSession sshSession = new SshSession();
 sshSession.setIp("xx.xx.xx.xx");
 sshSession.setPort(22);
@@ -38,7 +38,7 @@ sshSession.setAccount("root");
 sshSession.setPassword("this is a password");
 ```
 Next, you can borrow a session holder from SessionPool.
-```
+```java
 SshSessionHolder sessionHolder = null;
 try {
    sessionHolder = sessionPool.getSessionHolder(sshSession);
@@ -49,7 +49,7 @@ try {
 }
 ```
 How to execute shell command:
-```
+```java
 sessionHolder.execCommand("echo 'hello world'");
 ```
 
