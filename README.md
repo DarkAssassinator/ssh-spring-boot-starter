@@ -17,7 +17,7 @@ If you're using Maven, that looks like this:
 <dependency>
     <groupId>io.github.DarkAssassinator</groupId>
     <artifactId>ssh-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 If you're using Gradle, that looke like this:
