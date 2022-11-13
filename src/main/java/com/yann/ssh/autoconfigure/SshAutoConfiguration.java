@@ -19,12 +19,12 @@
 
 package com.yann.ssh.autoconfigure;
 
+import com.yann.ssh.pool.SftpConfig;
 import com.yann.ssh.pool.SshSessionAbandonedConfig;
 import com.yann.ssh.pool.SshSessionHolder;
 import com.yann.ssh.pool.SshSessionPool;
 import com.yann.ssh.pool.SshSessionPoolConfig;
 import com.yann.ssh.properties.SshProperties;
-import com.yann.ssh.properties.SshProperties.SftpProperties;
 
 import org.apache.commons.pool2.impl.AbandonedConfig;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
@@ -56,16 +56,16 @@ public class SshAutoConfiguration {
     }
 
     @Bean
-    public SftpProperties sftpProperties(SshProperties properties) {
-        SftpProperties sftpProperties = new SftpProperties();
-        BeanUtils.copyProperties(properties.getSftp(), sftpProperties);
-        return sftpProperties;
+    public SftpConfig sftpConfig(SshProperties properties) {
+        SftpConfig sftpConfig = new SftpConfig();
+        BeanUtils.copyProperties(properties.getSftp(), sftpConfig);
+        return sftpConfig;
     }
 
     @Bean
     public SshSessionPool sessionPool(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig,
-                                      AbandonedConfig abandonedConfig) {
-        return new SshSessionPool(poolConfig, abandonedConfig);
+                                      AbandonedConfig abandonedConfig, SftpConfig sftpConfig) {
+        return new SshSessionPool(poolConfig, abandonedConfig, sftpConfig);
     }
 
 }

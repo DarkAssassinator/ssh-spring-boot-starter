@@ -46,9 +46,11 @@ public class SshSessionPool {
 
     private SftpConfig sftpConfig;
 
-    public SshSessionPool(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig, AbandonedConfig abandonedConfig) {
+    public SshSessionPool(GenericKeyedObjectPoolConfig<SshSessionHolder> poolConfig, AbandonedConfig abandonedConfig,
+                          SftpConfig sftpConfig) {
         this.poolConfig = poolConfig;
         this.abandonedConfig = abandonedConfig;
+        this.sftpConfig = sftpConfig;
     }
 
     public GenericKeyedObjectPool<SshSession, SshSessionHolder> getSessionPool() {
@@ -65,7 +67,9 @@ public class SshSessionPool {
 
     public SshSessionHolder getSessionHolder(SshSession sessionHost) throws Exception {
         logger.info("try to borrow a session:{}", sessionHost.toString());
-        return getSessionPool().borrowObject(sessionHost);
+        SshSessionHolder holder = getSessionPool().borrowObject(sessionHost);
+        holder.setSftpConfig(sftpConfig);
+        return holder;
     }
 
     public void returnSshSessionHolder(SshSession sessionHost, SshSessionHolder sessionHolder) {

@@ -113,10 +113,22 @@ public class SshSessionHolder {
         return this.execCommand(command, -1, logger);
     }
 
+    public SshResponse execCommand(String command, long timeout) {
+        return this.execCommand(command, timeout, logger);
+    }
+
     public SshResponse execCommand(String command, long timeout, Logger logger) {
         return this.execCommand(createChannelExec(), command, timeout, logger);
     }
 
+    /**
+     * exec ssh command on the ssh session
+     * @param channelExec exec channel
+     * @param command ssh command
+     * @param timeout timeout
+     * @param customLogger logger for custom
+     * @return ssh response
+     */
     public SshResponse execCommand(ChannelExec channelExec, String command, long timeout, Logger customLogger) {
         customLogger.info("Executing command {} on session:{}", command, this);
         channelExec.setCommand(command);
@@ -174,6 +186,12 @@ public class SshSessionHolder {
         }
     }
 
+    /**
+     * upload file to the remote server
+     * @param localDirPath local directory path
+     * @param remoteDirPath remote directory path
+     * @return result
+     */
     public boolean sftpDir(String localDirPath, String remoteDirPath) {
         return sftpDir(localDirPath, remoteDirPath, logger);
     }
