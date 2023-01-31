@@ -109,16 +109,16 @@ public class SshSessionHolder {
         }
     }
 
-    public SshResponse execCommand(String command) {
-        return this.execCommand(command, -1, logger);
+    public SshResponse execCommand(String command, boolean usePty) {
+        return this.execCommand(command, -1, logger, usePty);
     }
 
-    public SshResponse execCommand(String command, long timeout) {
-        return this.execCommand(command, timeout, logger);
+    public SshResponse execCommand(String command, long timeout, boolean usePty) {
+        return this.execCommand(command, timeout, logger, usePty);
     }
 
-    public SshResponse execCommand(String command, long timeout, Logger logger) {
-        return this.execCommand(createChannelExec(), command, timeout, logger);
+    public SshResponse execCommand(String command, long timeout, Logger logger, boolean usePty) {
+        return this.execCommand(createChannelExec(), command, timeout, logger, usePty);
     }
 
     /**
@@ -129,13 +129,13 @@ public class SshSessionHolder {
      * @param customLogger logger for custom
      * @return ssh response
      */
-    public SshResponse execCommand(ChannelExec channelExec, String command, long timeout, Logger customLogger) {
+    public SshResponse execCommand(ChannelExec channelExec, String command, long timeout, Logger customLogger, boolean usePty) {
         customLogger.info("Executing command {} on session:{}", command, this);
         channelExec.setCommand(command);
         channelExec.setInputStream(null);
         channelExec.setErrStream(System.err);
         // it will kill process when channel disconnect, default true
-        channelExec.setPty(true);
+        channelExec.setPty(usePty);
 
         SshResponse response = new SshResponse();
         try (
@@ -279,6 +279,8 @@ public class SshSessionHolder {
         } catch (Exception e) {
             throw new SshException(
                     "sftp " + localDirPath + " to " + sshHost.toString() + ":" + remoteDirPath + " failed.", e);
+        } finally {
+            close(channelSftp);
         }
     }
 
@@ -290,7 +292,7 @@ public class SshSessionHolder {
      */
     public boolean createDirOnRemote(String remoteDirPath) {
         logger.info("create directory:{} on remote:{}", remoteDirPath, sshHost.toString());
-        SshResponse response = execCommand("mkdir -p " + remoteDirPath);
+        SshResponse response = execCommand("mkdir -p " + remoteDirPath, true);
         return response.getExitCode() == 0;
     }
 
@@ -298,7 +300,7 @@ public class SshSessionHolder {
         if (SINGLE_SLASH.equals(path)) {
             return;
         }
-        execCommand("rm -rf " + path);
+        execCommand("rm -rf " + path, true);
     }
 
     private void upload(ChannelSftp channelSftp, String src, String dst, boolean enableUploadMonitor,
